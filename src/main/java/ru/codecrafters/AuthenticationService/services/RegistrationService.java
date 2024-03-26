@@ -1,20 +1,22 @@
 package ru.codecrafters.AuthenticationService.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.repositories.UsersRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class UsersService {
-    private final UsersRepository usersRepository;
+public class RegistrationService {
 
-    public Optional<User> findOneByPhoneNumber(String phoneNumber){
-        return usersRepository.findByPhoneNumber(phoneNumber);
+    private final UsersRepository usersRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public void register(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        usersRepository.save(user);
     }
 }

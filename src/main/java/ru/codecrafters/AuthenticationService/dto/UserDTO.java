@@ -15,17 +15,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserDTO {
-
-    @NotEmpty
-    @Size(max = 255, min = 3)
-    private String login;
-
-    @NotEmpty
-    private String password;
-
     @NotEmpty
     @Size(max = 20)
     private String phoneNumber;
+
+    @NotEmpty
+    private String password;
 
     @NotEmpty
     @Size(max = 255)
@@ -41,6 +36,7 @@ public class UserDTO {
 
     private String registrationAddress;
 
+    @NotEmpty
     @Size(max = 10, min = 10)
     private String passportDetails;
 }

@@ -5,14 +5,20 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.codecrafters.AuthenticationService.dto.AuthResponseDTO;
+import org.springframework.web.bind.annotation.*;
+import ru.codecrafters.AuthenticationService.dto.AuthenticationDTO;
 import ru.codecrafters.AuthenticationService.dto.UserDTO;
 import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.security.JWTUtil;
+import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
+import ru.codecrafters.AuthenticationService.services.RegistrationService;
+import ru.codecrafters.AuthenticationService.util.AuthResponse;
+import ru.codecrafters.AuthenticationService.util.ResponseStatus;
+import ru.codecrafters.AuthenticationService.util.UserNotRegisteredException;
 import ru.codecrafters.AuthenticationService.util.UserValidator;
 
 @RestController
@@ -26,31 +32,79 @@ public class AuthController {
 
     private final JWTUtil jwtUtil;
 
+    private final RegistrationService registrationService;
+    private final AuthenticationManager authManager;
+
     @PostMapping("/registration")
-    public ResponseEntity<AuthResponseDTO> register(@Valid UserDTO userDTO,
-                                                    BindingResult bindingResult){
+    public ResponseEntity<AuthResponse> register(@RequestHeader(value = "Authorization", required = false) String authorization,
+                                                 @RequestBody @Valid UserDTO userDTO,
+                                                 BindingResult bindingResult){
+        if(authorization != null && !authorization.isEmpty()){
+            return new ResponseEntity<>(new AuthResponse("Invalid request", ResponseStatus.NOT_REGISTERED, ""), HttpStatus.BAD_REQUEST);
+        }
+
         User user = convertToUser(userDTO);
 
         userValidator.validate(user, bindingResult);
 
         if(bindingResult.hasErrors()){
-            return new ResponseEntity<>(new AuthResponseDTO(
-                    "Произошла ошибка при регистрации",
-                    "Error",
-                    ""), HttpStatus.BAD_REQUEST);
+            throw new UserNotRegisteredException(formErrorMessage(bindingResult));
         }
 
-        String token = jwtUtil.generateToken(user.getId(), user.getLogin());
+        registrationService.register(user);
 
-        AuthResponseDTO authResponseDTO = new AuthResponseDTO();
-        authResponseDTO.setMessage("Успешная регистрация");
-        authResponseDTO.setStatus("Success");
-        authResponseDTO.setToken(token);
+        String token = jwtUtil.generateToken(user.getId().toString(), user.getPhoneNumber());
 
-        return new ResponseEntity<>(authResponseDTO, HttpStatus.OK);
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setMessage("Успешная регистрация");
+        authResponse.setStatus(ResponseStatus.SUCCESS);
+        authResponse.setToken(token);
+
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthenticationDTO authenticationDTO){
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                authenticationDTO.getPhoneNumber(),
+                authenticationDTO.getPassword()
+        );
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authManager.authenticate(authToken).getPrincipal();
+
+        String token = jwtUtil.generateToken(userDetails.getUser().getId().toString(), userDetails.getUser().getPhoneNumber());
+
+        AuthResponse response = new AuthResponse("Успешная авторизация", ResponseStatus.SUCCESS, token);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     private User convertToUser(UserDTO userDTO){
         return modelMapper.map(userDTO, User.class);
+    }
+
+    private String formErrorMessage(BindingResult bindingResult){
+        StringBuilder message = new StringBuilder();
+
+        bindingResult.getFieldErrors().forEach(error ->
+                message.append(error.getField()).append(": ")
+                        .append(error.getDefaultMessage())
+                        .append("; ")
+        );
+        message.setLength(message.length() - 2);
+
+        return message.toString();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AuthResponse> handleException(UserNotRegisteredException e){
+        AuthResponse response = new AuthResponse(e.getMessage(), ResponseStatus.NOT_REGISTERED, "");
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(AuthenticationException e){
+        return new ResponseEntity<>("Неверный номер телефона или пароль", HttpStatus.BAD_REQUEST);
     }
 }

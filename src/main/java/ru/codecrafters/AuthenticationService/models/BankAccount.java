@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table(name = "bank_accounts")
@@ -18,7 +19,7 @@ public class BankAccount {
     @Id
     @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    public String id;
+    public UUID id;
 
     @Column(name = "balance")
     public BigDecimal balance;

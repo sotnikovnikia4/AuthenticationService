@@ -18,18 +18,18 @@ public class JWTUtil {
 
     @Value("${jwt_secret}")
     private String secret;
-    @Value("'localhost:' + ${server.port}")
+    @Value("localhost:${server.port}")
     private String issuer;
     @Value("${jwt_days_until_expiration}")
     private int expirationDays;
 
-    public String generateToken(String id, String login){
+    public String generateToken(String id, String phoneNumber){
         Date expirationDate = Date.from(ZonedDateTime.now().plusDays(expirationDays).toInstant());
 
         return JWT.create()
                 .withSubject("User details")
                 .withClaim("id", id)
-                .withClaim("login", login)
+                .withClaim("phone_number", phoneNumber)
                 .withIssuer(issuer)
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(secret));
@@ -42,6 +42,6 @@ public class JWTUtil {
                 .build();
         DecodedJWT jwt = verifier.verify(token);
 
-        return jwt.getClaim("login").asString();
+        return jwt.getClaim("phone_number").asString();
     }
 }

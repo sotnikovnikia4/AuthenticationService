@@ -19,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> foundUser = usersRepository.findByLogin(username);
+        Optional<User> foundUser = usersRepository.findByPhoneNumber(username);
 
         if(foundUser.isEmpty())
             throw new UsernameNotFoundException("Имя пользователя не найдено!");

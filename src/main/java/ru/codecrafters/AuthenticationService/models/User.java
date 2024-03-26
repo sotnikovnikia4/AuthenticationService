@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -17,21 +19,16 @@ public class User {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-
-    @Column(name = "login")
-    @NotEmpty
-    @Size(max = 255, min = 3, message = "Длина логина дожна быть между 3 и 255 символами")
-    private String login;
-
-    @Column(name = "password")
-    @NotEmpty
-    private String password;
+    private UUID id;
 
     @Column(name = "phone_number")
     @NotEmpty
     @Size(max = 20)
     private String phoneNumber;
+
+    @Column(name = "password")
+    @NotEmpty
+    private String password;
 
     @Column(name = "first_name")
     @NotEmpty
@@ -51,6 +48,7 @@ public class User {
     private String registrationAddress;
 
     @Column(name = "passport_details")
+    @NotEmpty
     @Size(max = 10, min = 10)
     private String passportDetails;
 }
