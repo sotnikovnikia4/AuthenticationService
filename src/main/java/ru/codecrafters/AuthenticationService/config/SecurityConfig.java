@@ -38,7 +38,7 @@ public class SecurityConfig{
                                         "/error"
                                 )
                                 .permitAll()
-                                .anyRequest().denyAll()
+                                .anyRequest().authenticated()
                 )
                 .formLogin(fl ->
                         fl.loginPage("/auth/login")
