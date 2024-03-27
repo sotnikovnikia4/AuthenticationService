@@ -1,6 +1,7 @@
 package ru.codecrafters.AuthenticationService.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +21,10 @@ public class Currency {
     private UUID id;
 
     @Column(name = "name")
+    @NotBlank
     private String name;
 
     @Column(name = "code")
+    @NotBlank
     private String code;
 }

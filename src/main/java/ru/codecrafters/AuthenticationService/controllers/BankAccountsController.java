@@ -26,7 +26,7 @@ public class BankAccountsController {
 
     private final BankAccountsService accountsService;
     private final ModelMapper modelMapper;
-    @GetMapping("/get_bank_accounts")
+    @GetMapping("/get-bank-accounts")
     public ResponseEntity<List<BankAccountDTO>> getAccounts(){
 
         List<BankAccountDTO> list = accountsService.getAccountsByUserId(
@@ -37,7 +37,7 @@ public class BankAccountsController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping("/get_bank_account")
+    @GetMapping("/get-bank-account")
     public ResponseEntity<BankAccountDTO> getAccount(@RequestParam(name = "account_number")
                                                      String accountNumber
                                                      ){

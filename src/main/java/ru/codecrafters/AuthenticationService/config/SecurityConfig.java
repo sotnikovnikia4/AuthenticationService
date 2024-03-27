@@ -31,13 +31,14 @@ public class SecurityConfig{
                         request.requestMatchers(
                                         "/auth/login",
                                         "/auth/registration",
-                                        "/error"
+                                        "/error",
+                                        "/api-docs"
                                 )
                                 .permitAll()
                                 .requestMatchers(
                                         "/accounts/*"
                                 ).authenticated()
-                                .anyRequest().denyAll()
+                                .anyRequest().permitAll()
                 )
                 .formLogin(fl ->
                         fl.loginPage("/auth/login")

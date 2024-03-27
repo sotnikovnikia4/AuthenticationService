@@ -2,6 +2,7 @@ package ru.codecrafters.AuthenticationService.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class BankAccount {
     private UUID id;
 
     @Column(name = "account_number")
-    @NotEmpty
+    @NotBlank
     @Size(max = 23)
     private String accountNumber;
 
