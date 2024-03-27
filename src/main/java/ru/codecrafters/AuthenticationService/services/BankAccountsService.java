@@ -55,4 +55,9 @@ public class BankAccountsService {
     private String generateAccountNumber(){//TODO заглушка
         return new Random().nextInt(Integer.MAX_VALUE / 2, Integer.MAX_VALUE) + "";
     }
+
+    public Optional<BankAccount> getAccountByUserAndAccountNumber(User user, String accountNumber) {
+
+        return accountsRepository.findByUserAndAccountNumber(user, accountNumber);
+    }
 }

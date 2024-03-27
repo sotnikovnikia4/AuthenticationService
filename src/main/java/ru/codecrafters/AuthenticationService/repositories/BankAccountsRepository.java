@@ -18,4 +18,6 @@ public interface BankAccountsRepository extends JpaRepository<BankAccount, Strin
 
     //@Query(value = "select * from bank_accounts where account_number=? and user_id=?", nativeQuery = true)
     Optional<BankAccount> findByUserAndCurrency(User user, Currency currency);
+
+    Optional<BankAccount> findByUserAndAccountNumber(User user, String accountNumber);
 }
