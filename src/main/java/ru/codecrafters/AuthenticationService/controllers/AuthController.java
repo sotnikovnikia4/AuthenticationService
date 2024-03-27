@@ -34,8 +34,8 @@ public class AuthController {
     private final AuthenticationManager authManager;
 
     @GetMapping("login")
-    public ResponseEntity<AuthErrorResponse> sendNotAuthenticatedMessage(){
-        return new ResponseEntity<>(new AuthErrorResponse("Вы не авторизованы для выполнения этого запроса", ResponseStatus.FORBIDDEN),
+    public ResponseEntity<AnyErrorResponse> sendNotAuthenticatedMessage(){
+        return new ResponseEntity<>(new AnyErrorResponse("Вы не авторизованы для выполнения этого запроса", ResponseStatus.FORBIDDEN),
                 HttpStatus.FORBIDDEN);
     }
 

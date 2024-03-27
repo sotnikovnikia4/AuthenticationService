@@ -15,7 +15,9 @@ import ru.codecrafters.AuthenticationService.models.BankAccount;
 import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
 import ru.codecrafters.AuthenticationService.services.BankAccountsService;
 import ru.codecrafters.AuthenticationService.util.AccountNotCreatedException;
+import ru.codecrafters.AuthenticationService.util.AnyErrorResponse;
 import ru.codecrafters.AuthenticationService.util.ErrorMethods;
+import ru.codecrafters.AuthenticationService.util.ResponseStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,10 +54,17 @@ public class BankAccountsController {
                 creationAccountDTO.getCurrencyCode()
         );
 
-        return new ResponseEntity<>(convertToBankAccountDTO(new BankAccount()), HttpStatus.CREATED);
+        return new ResponseEntity<>(convertToBankAccountDTO(account), HttpStatus.CREATED);
     }
 
     private BankAccountDTO convertToBankAccountDTO(BankAccount bankAccount){
         return modelMapper.map(bankAccount, BankAccountDTO.class);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AnyErrorResponse> handleException(AccountNotCreatedException e){
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage(), ResponseStatus.NOT_CREATED);
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

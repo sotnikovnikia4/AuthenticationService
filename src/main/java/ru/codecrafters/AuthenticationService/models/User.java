@@ -51,4 +51,8 @@ public class User {
     @NotEmpty
     @Size(max = 10, min = 10)
     private String passportDetails;
+
+    public User(UUID id){
+        this.id = id;
+    }
 }

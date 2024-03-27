@@ -35,7 +35,7 @@ public class BankAccount {
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     private Currency currency;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-//    public User user;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    public User user;
 }
