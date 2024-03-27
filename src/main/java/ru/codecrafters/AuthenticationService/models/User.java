@@ -1,10 +1,7 @@
 package ru.codecrafters.AuthenticationService.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +24,11 @@ public class User {
     @Size(max = 20)
     private String phoneNumber;
 
+    @Column(name = "email")
+    @Email
+    @NotBlank
+    private String email;
+
     @Column(name = "password")
     @NotBlank
     private String password;
@@ -44,14 +46,6 @@ public class User {
     @Column(name = "middle_name")
     @Size(max = 255)
     private String middleName;
-
-    @Column(name = "registration_address")
-    private String registrationAddress;
-
-    @Column(name = "passport_details")
-    @NotBlank
-    @Size(max = 10, min = 10)
-    private String passportDetails;
 
     public User(UUID id){
         this.id = id;

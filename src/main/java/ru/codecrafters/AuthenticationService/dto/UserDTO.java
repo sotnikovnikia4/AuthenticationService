@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,16 +36,10 @@ public class UserDTO {
     @JsonProperty("last_name")
     private String lastName;
 
-    @Column(name = "middle_name")
     @Size(max = 255)
     @JsonProperty("middle_name")
     private String middleName;
 
-    @JsonProperty("registration_address")
-    private String registrationAddress;
-
-    @NotBlank
-    @Size(max = 10, min = 10)
-    @JsonProperty("passport_details")
-    private String passportDetails;
+    @NotNull
+    private DocumentsDTO documents;
 }
