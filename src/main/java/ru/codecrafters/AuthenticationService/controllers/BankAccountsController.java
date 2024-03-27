@@ -1,19 +1,21 @@
 package ru.codecrafters.AuthenticationService.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import ru.codecrafters.AuthenticationService.dto.BankAccountDTO;
+import ru.codecrafters.AuthenticationService.dto.CreationAccountDTO;
 import ru.codecrafters.AuthenticationService.models.BankAccount;
 import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
 import ru.codecrafters.AuthenticationService.services.BankAccountsService;
+import ru.codecrafters.AuthenticationService.util.AccountNotCreatedException;
+import ru.codecrafters.AuthenticationService.util.ErrorMethods;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +36,23 @@ public class BankAccountsController {
 
 
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<BankAccountDTO> createAccount(@RequestBody @Valid CreationAccountDTO creationAccountDTO,
+                                                        BindingResult bindingResult){
+
+        if(bindingResult.hasErrors())
+        {
+            throw new AccountNotCreatedException(ErrorMethods.formErrorMessage(bindingResult));
+        }
+
+        BankAccount account = accountsService.registerOrThrowException(
+                ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId(),
+                creationAccountDTO.getCurrencyCode()
+        );
+
+        return new ResponseEntity<>(convertToBankAccountDTO(new BankAccount()), HttpStatus.CREATED);
     }
 
     private BankAccountDTO convertToBankAccountDTO(BankAccount bankAccount){

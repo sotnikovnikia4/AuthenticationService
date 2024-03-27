@@ -1,5 +1,6 @@
 package ru.codecrafters.AuthenticationService.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +18,7 @@ import lombok.Setter;
 public class UserDTO {
     @NotEmpty
     @Size(max = 20)
+    @JsonProperty("phone_number")
     private String phoneNumber;
 
     @NotEmpty
@@ -24,19 +26,23 @@ public class UserDTO {
 
     @NotEmpty
     @Size(max = 255)
+    @JsonProperty("first_name")
     private String firstName;
 
     @NotEmpty
     @Size(max = 255)
+    @JsonProperty("last_name")
     private String lastName;
 
     @Column(name = "middle_name")
     @Size(max = 255)
+    @JsonProperty("middle_name")
     private String middleName;
 
     private String registrationAddress;
 
     @NotEmpty
     @Size(max = 10, min = 10)
+    @JsonProperty("passport_details")
     private String passportDetails;
 }

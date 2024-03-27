@@ -16,10 +16,8 @@ import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.security.JWTUtil;
 import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
 import ru.codecrafters.AuthenticationService.services.RegistrationService;
-import ru.codecrafters.AuthenticationService.util.AuthResponse;
+import ru.codecrafters.AuthenticationService.util.*;
 import ru.codecrafters.AuthenticationService.util.ResponseStatus;
-import ru.codecrafters.AuthenticationService.util.UserNotRegisteredException;
-import ru.codecrafters.AuthenticationService.util.UserValidator;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,6 +33,12 @@ public class AuthController {
     private final RegistrationService registrationService;
     private final AuthenticationManager authManager;
 
+    @GetMapping("login")
+    public ResponseEntity<AuthErrorResponse> sendNotAuthenticatedMessage(){
+        return new ResponseEntity<>(new AuthErrorResponse("Вы не авторизованы для выполнения этого запроса", ResponseStatus.FORBIDDEN),
+                HttpStatus.FORBIDDEN);
+    }
+
     @PostMapping("/registration")
     public ResponseEntity<AuthResponse> register(@RequestHeader(value = "Authorization", required = false) String authorization,
                                                  @RequestBody @Valid UserDTO userDTO,
@@ -48,7 +52,7 @@ public class AuthController {
         userValidator.validate(user, bindingResult);
 
         if(bindingResult.hasErrors()){
-            throw new UserNotRegisteredException(formErrorMessage(bindingResult));
+            throw new UserNotRegisteredException(ErrorMethods.formErrorMessage(bindingResult));
         }
 
         registrationService.register(user);
@@ -83,18 +87,7 @@ public class AuthController {
         return modelMapper.map(userDTO, User.class);
     }
 
-    private String formErrorMessage(BindingResult bindingResult){
-        StringBuilder message = new StringBuilder();
 
-        bindingResult.getFieldErrors().forEach(error ->
-                message.append(error.getField()).append(": ")
-                        .append(error.getDefaultMessage())
-                        .append("; ")
-        );
-        message.setLength(message.length() - 2);
-
-        return message.toString();
-    }
 
     @ExceptionHandler
     public ResponseEntity<AuthResponse> handleException(UserNotRegisteredException e){

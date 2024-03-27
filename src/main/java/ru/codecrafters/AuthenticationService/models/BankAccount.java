@@ -2,6 +2,8 @@ package ru.codecrafters.AuthenticationService.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,14 +21,19 @@ public class BankAccount {
     @Id
     @Column(name = "account_id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    public UUID id;
+    private UUID id;
+
+    @Column(name = "account_number")
+    @NotEmpty
+    @Size(max = 23)
+    private String accountNumber;
 
     @Column(name = "balance")
-    public BigDecimal balance;
+    private BigDecimal balance;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
-    public Currency currency;
+    private Currency currency;
 
 //    @ManyToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
