@@ -1,9 +1,11 @@
 package ru.codecrafters.AuthenticationService.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,7 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.codecrafters.AuthenticationService.dto.AuthenticationDTO;
-import ru.codecrafters.AuthenticationService.dto.UserDTO;
+import ru.codecrafters.AuthenticationService.dto.UserRequestDTO;
 import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.security.JWTUtil;
 import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
@@ -20,8 +22,9 @@ import ru.codecrafters.AuthenticationService.util.*;
 import ru.codecrafters.AuthenticationService.util.ResponseStatus;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Tag(name = "Authentication")
 public class AuthController {
 
     private final UserValidator userValidator;
@@ -32,21 +35,14 @@ public class AuthController {
     private final RegistrationService registrationService;
     private final AuthenticationManager authManager;
 
-    @GetMapping("login")
-    public ResponseEntity<AnyErrorResponse> sendNotAuthenticatedMessage(){
-        return new ResponseEntity<>(new AnyErrorResponse("Вы не авторизованы для выполнения этого запроса", ResponseStatus.FORBIDDEN),
-                HttpStatus.FORBIDDEN);
-    }
-
     @PostMapping("/registration")
-    public ResponseEntity<AuthResponse> register(@RequestHeader(value = "Authorization", required = false) String authorization,
-                                                 @RequestBody @Valid UserDTO userDTO,
+    public ResponseEntity<AuthResponse> register(@RequestBody @Valid UserRequestDTO userRequestDTO,
                                                  BindingResult bindingResult){
-        if(authorization != null && !authorization.isEmpty()){
-            return new ResponseEntity<>(new AuthResponse("Invalid request", ResponseStatus.NOT_REGISTERED, ""), HttpStatus.BAD_REQUEST);
-        }
+//        if(authorization != null && !authorization.isEmpty()){
+//            return new ResponseEntity<>(new AuthResponse("Invalid request", ResponseStatus.NOT_REGISTERED, ""), HttpStatus.BAD_REQUEST);
+//        }
 
-        User user = convertToUser(userDTO);
+        User user = convertToUser(userRequestDTO);
         user.getDocuments().setUser(user);
 
         userValidator.validate(user, bindingResult);
@@ -83,8 +79,8 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    private User convertToUser(UserDTO userDTO){
-        return modelMapper.map(userDTO, User.class);
+    private User convertToUser(UserRequestDTO userRequestDTO){
+        return modelMapper.map(userRequestDTO, User.class);
     }
 
 

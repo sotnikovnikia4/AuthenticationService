@@ -1,11 +1,13 @@
 package ru.codecrafters.AuthenticationService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@Tag(name = "Accounts and users API")
 public class AuthenticationServiceApplication {
 
 	public static void main(String[] args) {

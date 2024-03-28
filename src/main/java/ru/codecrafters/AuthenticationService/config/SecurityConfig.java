@@ -36,21 +36,12 @@ public class SecurityConfig{
                                 )
                                 .permitAll()
                                 .requestMatchers(
-                                        "/accounts/*"
+                                        "/accounts/*",
+                                        "/users/*"
                                 ).authenticated()
                                 .anyRequest().permitAll()
                 )
-                .formLogin(fl ->
-                        fl.loginPage("/auth/login")
-                                .loginProcessingUrl("/process_login")
-//                                .defaultSuccessUrl("/hello", true)
-//                                .failureUrl("/auth/login?error")
-
-                )
-//                .logout(logout ->
-//                        logout.logoutUrl("/logout")
-//                                .logoutSuccessUrl("/auth/login")
-//                )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(m ->
                         m.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
