@@ -24,11 +24,10 @@ import ru.codecrafters.AuthenticationService.util.ResponseStatus;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final ModelMapper modelMapper;
-
     private final UserValidator userValidator;
 
     private final JWTUtil jwtUtil;
+    private final ModelMapper modelMapper;
 
     private final RegistrationService registrationService;
     private final AuthenticationManager authManager;
@@ -48,6 +47,7 @@ public class AuthController {
         }
 
         User user = convertToUser(userDTO);
+        user.getDocuments().setUser(user);
 
         userValidator.validate(user, bindingResult);
 

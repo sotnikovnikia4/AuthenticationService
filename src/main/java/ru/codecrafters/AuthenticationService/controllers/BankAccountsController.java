@@ -26,8 +26,9 @@ public class BankAccountsController {
 
     private final BankAccountsService accountsService;
     private final ModelMapper modelMapper;
+
     @GetMapping("/get-bank-accounts")
-    public ResponseEntity<List<BankAccountDTO>> getAccounts(){
+    public ResponseEntity<List<BankAccountDTO>> getAccounts(@RequestHeader(name = "Authorization") String header){
 
         List<BankAccountDTO> list = accountsService.getAccountsByUserId(
                 ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId()
@@ -39,8 +40,8 @@ public class BankAccountsController {
 
     @GetMapping("/get-bank-account")
     public ResponseEntity<BankAccountDTO> getAccount(@RequestParam(name = "account_number")
-                                                     String accountNumber
-                                                     ){
+                                                     String accountNumber,
+                                                     @RequestHeader(name = "Authorization") String header){
         Optional<BankAccount> accountOptional = accountsService.getAccountByUserAndAccountNumber(
                 ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser(),
                 accountNumber
@@ -54,7 +55,8 @@ public class BankAccountsController {
 
     @PostMapping("/create")
     public ResponseEntity<BankAccountDTO> createAccount(@RequestBody @Valid CreationAccountDTO creationAccountDTO,
-                                                        BindingResult bindingResult){
+                                                        BindingResult bindingResult,
+                                                        @RequestHeader(name = "Authorization") String header){
 
         if(bindingResult.hasErrors())
         {

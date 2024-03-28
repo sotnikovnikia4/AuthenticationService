@@ -14,9 +14,10 @@ public class RegistrationService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
+    //@Transactional
     public void register(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         usersRepository.save(user);
+
     }
 }

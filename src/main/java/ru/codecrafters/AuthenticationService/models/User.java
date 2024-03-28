@@ -6,6 +6,8 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.Cascade;
 
 import java.util.UUID;
 
@@ -21,28 +23,28 @@ public class User {
     private UUID id;
 
     @Column(name = "phone_number")
-    @NotBlank
+    @NotEmpty
     @Size(max = 20)
     private String phoneNumber;
 
     @Column(name = "email")
     @Email
-    @NotBlank
+    @NotEmpty
     @Size(max = 255)
     private String email;
 
     @Column(name = "password")
-    @NotBlank
+    @NotEmpty
     @Size(max = 255)
     private String password;
 
     @Column(name = "first_name")
-    @NotBlank
+    @NotEmpty
     @Size(max = 255)
     private String firstName;
 
     @Column(name = "last_name")
-    @NotBlank
+    @NotEmpty
     @Size(max = 255)
     private String lastName;
 
@@ -51,6 +53,7 @@ public class User {
     private String middleName;
 
     @OneToOne(mappedBy = "user")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.ALL})
     @NotNull
     private Documents documents;
 
