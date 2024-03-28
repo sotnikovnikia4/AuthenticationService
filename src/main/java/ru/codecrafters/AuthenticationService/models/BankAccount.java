@@ -2,9 +2,7 @@ package ru.codecrafters.AuthenticationService.models;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,6 +28,8 @@ public class BankAccount {
     private String accountNumber;
 
     @Column(name = "balance")
+    @NotNull
+    @DecimalMax("999999999999999,99")
     private BigDecimal balance;
 
     @ManyToOne(fetch = FetchType.EAGER)
