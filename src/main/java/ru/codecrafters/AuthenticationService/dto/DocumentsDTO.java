@@ -2,7 +2,7 @@ package ru.codecrafters.AuthenticationService.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -20,11 +20,11 @@ import java.util.UUID;
 public class DocumentsDTO {
 
     @JsonProperty("registration_address")
-    @NotEmpty
+    @NotBlank
     private String registrationAddress;
 
     @JsonProperty("passport_details")
-    @NotEmpty
+    @NotBlank
     @Size(max = 10, min = 10)
     private String passportDetails;
 
@@ -33,17 +33,17 @@ public class DocumentsDTO {
     private Date passportIssuedAt;
 
     @JsonProperty("inn")
-    @NotEmpty
+    @NotBlank
     @Size(min = 12, max=12)
     private String inn;
 
     @JsonProperty("snils")
-    @NotEmpty
+    @NotBlank
     @Size(min=15, max=15)
     private String snils;
 
     @JsonProperty("place_of_birth")
-    @NotEmpty
+    @NotBlank
     private String placeOfBirth;
 
     @JsonProperty("date_of_birth")

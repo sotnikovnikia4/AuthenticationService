@@ -1,7 +1,7 @@
 package ru.codecrafters.AuthenticationService.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -26,11 +26,11 @@ public class Documents {//TODO
     private UUID id;
 
     @Column(name = "registration_address")
-    @NotEmpty
+    @NotBlank
     private String registrationAddress;
 
     @Column(name = "passport_details")
-    @NotEmpty
+    @NotBlank
     @Size(max = 10, min = 10)
     private String passportDetails;
 
@@ -40,17 +40,17 @@ public class Documents {//TODO
     private Date passportIssuedAt;
 
     @Column(name = "inn")
-    @NotEmpty
+    @NotBlank
     @Size(min = 12, max=12)
     private String inn;
 
     @Column(name = "snils")
-    @NotEmpty
+    @NotBlank
     @Size(min=15, max=15)
     private String snils;
 
     @Column(name = "place_of_birth")
-    @NotEmpty
+    @NotBlank
     private String placeOfBirth;
 
     @Column(name = "date_of_birth")

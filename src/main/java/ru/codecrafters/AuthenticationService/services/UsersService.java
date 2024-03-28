@@ -17,4 +17,8 @@ public class UsersService {
     public Optional<User> findOneByPhoneNumber(String phoneNumber){
         return usersRepository.findByPhoneNumber(phoneNumber);
     }
+
+    public Optional<User> findOneByEmail(String email){
+        return usersRepository.findByEmail(email);
+    }
 }

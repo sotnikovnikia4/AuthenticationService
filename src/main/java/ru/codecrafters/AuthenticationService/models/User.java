@@ -2,12 +2,13 @@ package ru.codecrafters.AuthenticationService.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.Cascade;
 
 import java.util.UUID;
 
@@ -23,28 +24,28 @@ public class User {
     private UUID id;
 
     @Column(name = "phone_number")
-    @NotEmpty
+    @NotBlank
     @Size(max = 20)
     private String phoneNumber;
 
     @Column(name = "email")
     @Email
-    @NotEmpty
+    @NotBlank
     @Size(max = 255)
     private String email;
 
     @Column(name = "password")
-    @NotEmpty
+    @NotBlank
     @Size(max = 255)
     private String password;
 
     @Column(name = "first_name")
-    @NotEmpty
+    @NotBlank
     @Size(max = 255)
     private String firstName;
 
     @Column(name = "last_name")
-    @NotEmpty
+    @NotBlank
     @Size(max = 255)
     private String lastName;
 
@@ -52,8 +53,7 @@ public class User {
     @Size(max = 255)
     private String middleName;
 
-    @OneToOne(mappedBy = "user")
-    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.ALL})
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @NotNull
     private Documents documents;
 

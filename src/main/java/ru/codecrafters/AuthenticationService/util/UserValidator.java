@@ -27,7 +27,13 @@ public class UserValidator implements Validator {
         Optional<User> userWithSamePhoneNumber = usersService.findOneByPhoneNumber(userToCheck.getPhoneNumber());
 
         if(userWithSamePhoneNumber.isPresent()){
-            errors.rejectValue("phoneNumber", "", "Пользователь с таким номером телефона уже зарегистрирован!");
+            errors.rejectValue("phoneNumber", "", "Этот номер телефона занят!");
+        }
+
+        Optional<User> userWithSameEmail = usersService.findOneByEmail(userToCheck.getEmail());
+
+        if(userWithSameEmail.isPresent()){
+            errors.rejectValue("email", "", "Этот email занят!");
         }
     }
 }
