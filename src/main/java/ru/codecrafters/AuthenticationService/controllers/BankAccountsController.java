@@ -67,7 +67,7 @@ public class BankAccountsController {
         }
 
         BankAccount account = accountsService.registerOrThrowException(
-                ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId(),
+                ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser(),
                 creationAccountDTO.getCurrencyCode()
         );
 

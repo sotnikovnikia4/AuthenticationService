@@ -46,9 +46,6 @@ public class AuthController {
     @PostMapping("/registration")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid UserRequestDTO userRequestDTO,
                                                  BindingResult bindingResult){
-//        if(authorization != null && !authorization.isEmpty()){
-//            return new ResponseEntity<>(new AuthResponse("Invalid request", ResponseStatus.NOT_REGISTERED, ""), HttpStatus.BAD_REQUEST);
-//        }
 
         User user = convertToUser(userRequestDTO);
         if(user.getDocuments() != null)
@@ -60,7 +57,7 @@ public class AuthController {
             throw new UserNotRegisteredException(ErrorMethods.formErrorMessage(bindingResult));
         }
 
-        registrationService.register(user);
+        registrationService.registerOrThrowException(user);
 
         String token = jwtUtil.generateToken(user.getId().toString(), user.getPhoneNumber());
 

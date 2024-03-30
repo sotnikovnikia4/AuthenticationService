@@ -9,8 +9,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -58,6 +60,9 @@ public class User {
     @NotNull
     @Valid
     private Documents documents;
+
+    @OneToMany(mappedBy = "user")
+    private List<BankAccount> accounts;
 
     public User(UUID id){
         this.id = id;

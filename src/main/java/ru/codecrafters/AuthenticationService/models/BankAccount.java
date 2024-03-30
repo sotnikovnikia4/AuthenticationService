@@ -2,10 +2,14 @@ package ru.codecrafters.AuthenticationService.models;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -15,6 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class BankAccount {
 
     @Id
@@ -29,7 +34,7 @@ public class BankAccount {
 
     @Column(name = "balance")
     @NotNull
-    @DecimalMax("999999999999999,99")
+    @DecimalMax("999999999999999.99")
     private BigDecimal balance;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -39,4 +44,11 @@ public class BankAccount {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     public User user;
+
+    public BankAccount(String accountNumber, BigDecimal balance, Currency currency, User user) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.currency = currency;
+        this.user = user;
+    }
 }
