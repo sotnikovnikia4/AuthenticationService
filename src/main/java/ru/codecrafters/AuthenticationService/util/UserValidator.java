@@ -14,6 +14,7 @@ import java.util.Optional;
 public class UserValidator implements Validator {
 
     private final UsersService usersService;
+    private final DocumentsValidator documentsValidator;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -35,5 +36,7 @@ public class UserValidator implements Validator {
         if(userWithSameEmail.isPresent()){
             errors.rejectValue("email", "", "Этот email занят!");
         }
+
+        if(userToCheck.getDocuments() != null) documentsValidator.validate(userToCheck.getDocuments(), errors);
     }
 }

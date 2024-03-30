@@ -2,7 +2,11 @@ package ru.codecrafters.AuthenticationService.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.internal.engine.ValidatorContextImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,9 +15,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.codecrafters.AuthenticationService.dto.AuthenticationDTO;
 import ru.codecrafters.AuthenticationService.dto.UserRequestDTO;
+import ru.codecrafters.AuthenticationService.models.Documents;
 import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.security.JWTUtil;
 import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
@@ -35,6 +41,8 @@ public class AuthController {
     private final RegistrationService registrationService;
     private final AuthenticationManager authManager;
 
+    private final ValidatorFactory context;
+
     @PostMapping("/registration")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid UserRequestDTO userRequestDTO,
                                                  BindingResult bindingResult){
@@ -43,7 +51,8 @@ public class AuthController {
 //        }
 
         User user = convertToUser(userRequestDTO);
-        user.getDocuments().setUser(user);
+        if(user.getDocuments() != null)
+            user.getDocuments().setUser(user);
 
         userValidator.validate(user, bindingResult);
 
@@ -86,8 +95,8 @@ public class AuthController {
 
 
     @ExceptionHandler
-    public ResponseEntity<AuthResponse> handleException(UserNotRegisteredException e){
-        AuthResponse response = new AuthResponse(e.getMessage(), ResponseStatus.NOT_REGISTERED, "");
+    public ResponseEntity<AnyErrorResponse> handleException(UserNotRegisteredException e){
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage(), ResponseStatus.NOT_REGISTERED);
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

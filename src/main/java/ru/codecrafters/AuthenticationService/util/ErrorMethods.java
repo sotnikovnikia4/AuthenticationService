@@ -7,7 +7,7 @@ public class ErrorMethods {
         StringBuilder message = new StringBuilder();
 
         bindingResult.getFieldErrors().forEach(error ->
-                message//.append(error.getField()).append(": ")
+                message.append(error.getField()).append(": ")
                         .append(error.getDefaultMessage())
                         .append("; ")
         );
