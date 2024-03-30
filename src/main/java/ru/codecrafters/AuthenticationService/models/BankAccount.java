@@ -28,13 +28,13 @@ public class BankAccount {
     private UUID id;
 
     @Column(name = "account_number")
-    @NotBlank
+    @NotBlank(message = "Номер счёта не должен быть пустым")
     @Size(max = 23)
     private String accountNumber;
 
     @Column(name = "balance")
-    @NotNull
-    @DecimalMax("999999999999999.99")
+    @NotNull(message = "Поле для баланса не должно быть пустым")
+    @DecimalMax(value = "999999999999999.99", message = "Некорректное значение баланса")
     private BigDecimal balance;
 
     @ManyToOne(fetch = FetchType.EAGER)

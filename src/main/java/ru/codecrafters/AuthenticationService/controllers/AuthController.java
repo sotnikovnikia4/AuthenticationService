@@ -93,7 +93,7 @@ public class AuthController {
 
     @ExceptionHandler
     public ResponseEntity<AnyErrorResponse> handleException(UserNotRegisteredException e){
-        AnyErrorResponse response = new AnyErrorResponse(e.getMessage(), ResponseStatus.NOT_REGISTERED);
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

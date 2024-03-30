@@ -14,31 +14,20 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserResponseDTO {
     @JsonProperty("phone_number")
-    @NotBlank
-    @Size(max = 20)
     private String phoneNumber;
 
     @JsonProperty("email")
-    @Email
-    @NotBlank
-    @Size(max = 255)
     private String email;
 
     @JsonProperty("first_name")
-    @NotBlank
-    @Size(max = 255)
     private String firstName;
 
     @JsonProperty("last_name")
-    @NotBlank
-    @Size(max = 255)
     private String lastName;
 
     @JsonProperty("middle_name")
-    @Size(max = 255)
     private String middleName;
 
     @JsonProperty("documents")
-    @NotNull
     private DocumentsDTO documents;
 }

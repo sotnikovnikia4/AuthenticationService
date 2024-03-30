@@ -14,7 +14,7 @@ import lombok.Setter;
 public class CreationAccountDTO {
 
     @NotBlank
-    @Size(min = 3, max = 3)
+    @Size(min = 3, max = 3, message = "Размер кода валюты должен быть равен 3")
     @JsonProperty("currency_code")
     private String currencyCode;
 }

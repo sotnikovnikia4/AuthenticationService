@@ -20,7 +20,7 @@ public class JWTUtil {
 
     @Value("${jwt_secret}")
     private String secret;
-    @Value("localhost:${server.port}")
+    @Value("${jwt_issuer}")
     private String issuer;
     @Value("${jwt_days_until_expiration}")
     private int expirationDays;

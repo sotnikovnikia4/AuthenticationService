@@ -23,10 +23,10 @@ public class Currency {
     private UUID id;
 
     @Column(name = "name")
-    @NotBlank
+    @NotBlank(message = "Имя валюты не должно быть пустым")
     private String name;
 
     @Column(name = "code")
-    @NotBlank
+    @NotBlank(message = "Код валюты не должен быть пустым")
     private String code;
 }

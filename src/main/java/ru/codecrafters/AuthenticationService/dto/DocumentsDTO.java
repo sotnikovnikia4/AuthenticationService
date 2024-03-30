@@ -22,33 +22,34 @@ import java.util.UUID;
 public class DocumentsDTO {
 
     @JsonProperty("registration_address")
-    @NotBlank
+    @NotBlank(message = "Адрес регистрации не должен быть пустым")
     private String registrationAddress;
 
     @JsonProperty("passport_details")
-    @NotBlank
-    @Size(max = 10, min = 10)
+    @NotBlank(message = "Серия и номер паспорта не должны быть пустыми")
+    @Size(max = 10, min = 10, message = "Размер поля для паспорта должен быть равен 10 цифрам")
+    @Pattern(regexp = "\\d{10}", message = "Данные для отправки в этом поле должны быть записаны в формате: ССССНННННН, с - серия паспорта, н - номер паспорта")
     private String passportDetails;
 
     @JsonProperty("passport_issued_at")
-    @NotNull
+    @NotNull(message = "Значение даты выдачи паспорта не должно быть пустым")
     private Date passportIssuedAt;
 
     @JsonProperty("inn")
-    @NotBlank
-    @Size(min = 12, max=12)
+    @NotBlank(message = "ИНН не должен быть пустым")
+    @Pattern(regexp = "\\d{12}", message = "Некорректный формат для ИНН")
     private String inn;
 
     @JsonProperty("snils")
     @NotBlank
-    @Size(min=15, max=15)
+    @Pattern(regexp = "\\d{15}", message = "Некорректный формат для СНИЛС")
     private String snils;
 
     @JsonProperty("place_of_birth")
-    @NotBlank
+    @NotBlank(message = "Поле 'Место рождения' не должно быть пустым")
     private String placeOfBirth;
 
     @JsonProperty("date_of_birth")
-    @NotNull
+    @NotNull(message = "Поле 'Дата рождения' не должно быть пустым")
     private Date dateOfBirth;
 }

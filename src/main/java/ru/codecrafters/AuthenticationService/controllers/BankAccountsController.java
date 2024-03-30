@@ -80,14 +80,14 @@ public class BankAccountsController {
 
     @ExceptionHandler
     public ResponseEntity<AnyErrorResponse> handleException(AccountNotCreatedException e){
-        AnyErrorResponse response = new AnyErrorResponse(e.getMessage(), ResponseStatus.NOT_CREATED);
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<AnyErrorResponse> handleException(AccountNotFoundException e){
-        AnyErrorResponse response = new AnyErrorResponse(e.getMessage(), ResponseStatus.NOT_CREATED);
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }

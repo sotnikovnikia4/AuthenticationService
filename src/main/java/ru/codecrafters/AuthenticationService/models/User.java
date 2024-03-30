@@ -2,10 +2,7 @@ package ru.codecrafters.AuthenticationService.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,37 +24,38 @@ public class User {
     private UUID id;
 
     @Column(name = "phone_number")
-    @NotBlank
-    @Size(max = 20)
+    @NotBlank(message = "Поле для номера телефона не должно быть пустым")
+    @Size(max = 20, message = "Номер телефона слишком большой")
+    @Pattern(regexp = "[+]?\\d*", message = "В номере телефона могут быть только цифры и знак '+'")
     private String phoneNumber;
 
     @Column(name = "email")
-    @Email
-    @NotBlank
-    @Size(max = 255)
+    @Email(message = "Email должен быть в формате example@mail.ru")
+    @NotBlank(message = "Email не должен быть пустым")
+    @Size(max = 255, message = "Слишком большой email")
     private String email;
 
     @Column(name = "password")
-    @NotBlank
-    @Size(max = 255)
+    @NotBlank(message = "Пароль не должен быть пустым")
+    @Size(max = 255, message = "Пароль слишком большой")
     private String password;
 
     @Column(name = "first_name")
-    @NotBlank
-    @Size(max = 255)
+    @NotBlank(message = "Имя не должно быть пустым")
+    @Size(max = 255, message = "Слишком большое имя")
     private String firstName;
 
     @Column(name = "last_name")
-    @NotBlank
-    @Size(max = 255)
+    @NotBlank(message = "Фамилия не должна быть пустой")
+    @Size(max = 255, message = "Слишком большая фамилия")
     private String lastName;
 
     @Column(name = "middle_name")
-    @Size(max = 255)
+    @Size(max = 255, message = "Слишком большое отчество")
     private String middleName;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @NotNull
+    @NotNull(message = "Данные по документам должны быть")
     @Valid
     private Documents documents;
 
