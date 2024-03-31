@@ -5,12 +5,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.codecrafters.AuthenticationService.api.CentralBankAPI;
+import ru.codecrafters.AuthenticationService.dto.TransferMoneyDTO;
 import ru.codecrafters.AuthenticationService.models.BankAccount;
 import ru.codecrafters.AuthenticationService.models.Currency;
 import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.repositories.BankAccountsRepository;
 import ru.codecrafters.AuthenticationService.repositories.CurrenciesRepository;
 import ru.codecrafters.AuthenticationService.util.AccountNotCreatedException;
+import ru.codecrafters.AuthenticationService.util.MoneyNotTransferredException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -73,5 +75,25 @@ public class BankAccountsService {
     public Optional<BankAccount> getAccountByUserAndAccountNumber(User user, String accountNumber) {
 
         return accountsRepository.findByUserAndAccountNumber(user, accountNumber);
+    }
+
+    @Transactional
+    public void transferMoneyOrThrowException(TransferMoneyDTO transferMoneyDTO) throws MoneyNotTransferredException {
+        Optional<BankAccount> accountFrom = accountsRepository.findByAccountNumber(transferMoneyDTO.getBankAccountFrom());
+        if(accountFrom.isEmpty()){
+            throw new MoneyNotTransferredException("Счет, с котороого нужно перевести деньги, не существует в базе данных");
+        }
+
+        Optional<BankAccount> accountTo = accountsRepository.findByAccountNumber(transferMoneyDTO.getBankAccountTo());
+        if(accountTo.isEmpty()){
+            throw new MoneyNotTransferredException("Счет, на который нужно перевести деньги, не существует в базе данных");
+        }
+
+        if(!centralBankAPI.confirmTransferMoney(transferMoneyDTO)){
+            throw new MoneyNotTransferredException("Центральный банк отклонил запрос на перевод денег");
+        }
+
+        accountFrom.get().setBalance(accountFrom.get().getBalance().subtract(transferMoneyDTO.getMoneyMinus()));
+        accountTo.get().setBalance(accountTo.get().getBalance().add(transferMoneyDTO.getMoneyPlus()));
     }
 }

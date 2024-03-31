@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.codecrafters.AuthenticationService.dto.RequestCreationAccountDTO;
+import ru.codecrafters.AuthenticationService.dto.TransferMoneyDTO;
 import ru.codecrafters.AuthenticationService.dto.UserResponseDTO;
 import ru.codecrafters.AuthenticationService.models.BankAccount;
 import ru.codecrafters.AuthenticationService.models.User;
@@ -24,6 +25,8 @@ public class CentralBankAPI {
     private String centralBankUrlNewAccount;
     @Value("${central_bank_url_new_user}")
     private String centralBankUrlNewUser;
+    @Value("${central_bank_url_transfer_money}")
+    private String centralBankUrlTransferMoney;
 
     public boolean confirmCreationAccount(BankAccount account) {
         return getConfirm(convertToRequestCreationAccountDTO(account), centralBankUrlNewAccount);
@@ -31,6 +34,10 @@ public class CentralBankAPI {
 
     public boolean confirmRegistrationAccount(User user){
         return getConfirm(convertToUserResponseDTO(user), centralBankUrlNewUser);
+    }
+
+    public boolean confirmTransferMoney(TransferMoneyDTO transferMoneyDTO){//TODO
+        return getConfirm(transferMoneyDTO, centralBankUrlTransferMoney);
     }
 
     private boolean getConfirm(Object obj, String url){

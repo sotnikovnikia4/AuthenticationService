@@ -5,8 +5,9 @@ import org.springframework.stereotype.Repository;
 import ru.codecrafters.AuthenticationService.models.Currency;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface CurrenciesRepository extends JpaRepository<Currency, String> {
+public interface CurrenciesRepository extends JpaRepository<Currency, UUID> {
     Optional<Currency> findByCode(String code);
 }

@@ -15,4 +15,8 @@ public class TestController {
     public Boolean testUrl1(){
         return true;
     }
+    @PostMapping("/accept-transfer-money")
+    public Boolean testUrl2(){
+        return true;
+    }
 }
