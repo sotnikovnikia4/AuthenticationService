@@ -54,7 +54,7 @@ public class BankAccountsService {
 
         BankAccount bankAccount = new BankAccount(
                 generateAccountNumber(lengthAccountNumber),
-                new BigDecimal(0),
+                new BigDecimal(10000),
                 currency.get(),
                 user
         );

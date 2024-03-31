@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<User> foundUser = usersRepository.findByPhoneNumber(username);
 
         if(foundUser.isEmpty())
-            throw new UsernameNotFoundException("Имя пользователя не найдено!");
+            throw new UsernameNotFoundException("Пользователь не найден!");
 
         return new UserDetailsImpl(foundUser.get());
     }

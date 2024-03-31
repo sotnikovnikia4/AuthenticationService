@@ -99,7 +99,7 @@ public class AuthController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleException(AuthenticationException e){
-        return new ResponseEntity<>("Неверный номер телефона или пароль", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<AnyErrorResponse> handleException(AuthenticationException e){
+        return new ResponseEntity<>(new AnyErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }
