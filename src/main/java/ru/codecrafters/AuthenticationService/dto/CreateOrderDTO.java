@@ -1,5 +1,6 @@
 package ru.codecrafters.AuthenticationService.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -13,21 +14,19 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 public class CreateOrderDTO {
+    @JsonProperty("order_type")
     @NotBlank
     private String orderType;
 
-    @NotBlank
-    private String currencyFrom;
-
+    @JsonProperty("currency_from_value")
     @NotNull
     private BigDecimal currencyFromValue;
 
+    @JsonProperty("bank_account_from")
     @NotBlank
     private String bankAccountFrom;
 
-    @NotBlank
-    private String currencyTo;
-
+    @JsonProperty("bank_account_to")
     @NotBlank
     private String bankAccountTo;
 }

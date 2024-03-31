@@ -114,8 +114,6 @@ public class BankAccountsService {
             throw new OrderNotCreatedException("Счет bankAccountTo не существует в базе данных");
         }
 
-
-
-        return ordersAPI.sendRequestCreateOrderAndGetMessageResponse(userId, createOrderDTO);
+        return ordersAPI.sendRequestCreateOrderAndGetMessageResponse(userId, createOrderDTO, accountFrom.get().getCurrency().getCode(), accountTo.get().getCurrency().getCode());
     }
 }

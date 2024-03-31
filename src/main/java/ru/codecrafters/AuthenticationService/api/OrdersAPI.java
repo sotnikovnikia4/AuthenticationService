@@ -25,15 +25,15 @@ public class OrdersAPI {
 
     private final RestTemplate restTemplate;
 
-    public AnySuccessfulResponse sendRequestCreateOrderAndGetMessageResponse(UUID userId, CreateOrderDTO createOrderDTO){
+    public AnySuccessfulResponse sendRequestCreateOrderAndGetMessageResponse(UUID userId, CreateOrderDTO createOrderDTO, String currencyFrom, String currencyTo){
         Map<String, Object> jsonBody = new HashMap<>();
 
         jsonBody.put("UserId", userId);
         jsonBody.put("OrderType", createOrderDTO.getOrderType());
-        jsonBody.put("CurrencyFrom", createOrderDTO.getCurrencyFrom());
+        jsonBody.put("CurrencyFrom", currencyFrom);
         jsonBody.put("CurrencyFromValue", createOrderDTO.getCurrencyFromValue());
         jsonBody.put("BankAccountFrom", createOrderDTO.getBankAccountFrom());
-        jsonBody.put("CurrencyTo", createOrderDTO.getCurrencyTo());
+        jsonBody.put("CurrencyTo", currencyTo);
         jsonBody.put("BankAccountTo", createOrderDTO.getBankAccountTo());
 
         return getResponse(jsonBody, ordersUrlCreateOrder);
