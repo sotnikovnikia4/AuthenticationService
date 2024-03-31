@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.codecrafters.AuthenticationService.dto.CreateOrderDTO;
@@ -38,7 +39,7 @@ public class OrdersController {
     }
 
     @PostMapping("/create-order")
-    public ResponseEntity<AnySuccessfulResponse> createOrder(
+    public ResponseEntity<String> createOrder(
             @RequestBody @Valid CreateOrderDTO createOrderDTO,
             BindingResult bindingResult
             ){
@@ -48,7 +49,7 @@ public class OrdersController {
 
         UUID userId = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId();
 
-        AnySuccessfulResponse response = accountsService.createOrderAndReturnAnswer(userId, createOrderDTO);
+        String response = accountsService.createOrderAndReturnAnswer(userId, createOrderDTO);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -60,6 +61,12 @@ public class OrdersController {
 
     @ExceptionHandler
     public ResponseEntity<AnyErrorResponse> handleException(OrderNotCreatedException e){
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AnyErrorResponse> handleException(UsernameNotFoundException e){
         AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

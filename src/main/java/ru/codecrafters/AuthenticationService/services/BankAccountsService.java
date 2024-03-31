@@ -103,7 +103,7 @@ public class BankAccountsService {
     }
 
     @Transactional
-    public AnySuccessfulResponse createOrderAndReturnAnswer(UUID userId, CreateOrderDTO createOrderDTO) {
+    public String createOrderAndReturnAnswer(UUID userId, CreateOrderDTO createOrderDTO) {
         Optional<BankAccount> accountFrom = accountsRepository.findByAccountNumber(createOrderDTO.getBankAccountFrom());
         if(accountFrom.isEmpty()){
             throw new OrderNotCreatedException("Счет bankAccountFrom не существует в базе данных");

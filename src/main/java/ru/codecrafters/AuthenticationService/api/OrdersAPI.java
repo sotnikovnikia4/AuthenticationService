@@ -25,7 +25,7 @@ public class OrdersAPI {
 
     private final RestTemplate restTemplate;
 
-    public AnySuccessfulResponse sendRequestCreateOrderAndGetMessageResponse(UUID userId, CreateOrderDTO createOrderDTO, String currencyFrom, String currencyTo){
+    public String sendRequestCreateOrderAndGetMessageResponse(UUID userId, CreateOrderDTO createOrderDTO, String currencyFrom, String currencyTo){
         Map<String, Object> jsonBody = new HashMap<>();
 
         jsonBody.put("UserId", userId);
@@ -39,11 +39,11 @@ public class OrdersAPI {
         return getResponse(jsonBody, ordersUrlCreateOrder);
     }
 
-    private AnySuccessfulResponse getResponse(Object obj, String url){
+    private String getResponse(Object obj, String url){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Object> httpEntity = new HttpEntity<>(obj, headers);
 
-        return restTemplate.postForObject(url, httpEntity, AnySuccessfulResponse.class);
+        return restTemplate.postForObject(url, httpEntity, String.class);
     }
 }

@@ -41,8 +41,6 @@ public class AuthController {
     private final RegistrationService registrationService;
     private final AuthenticationManager authManager;
 
-    private final ValidatorFactory context;
-
     @PostMapping("/registration")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid UserRequestDTO userRequestDTO,
                                                  BindingResult bindingResult){
