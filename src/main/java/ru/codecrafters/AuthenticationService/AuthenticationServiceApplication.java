@@ -21,4 +21,7 @@ public class AuthenticationServiceApplication {
 		return new ModelMapper();
 	}
 
+	@Bean RestTemplate restTemplate(){
+		return new RestTemplate();
+	}
 }

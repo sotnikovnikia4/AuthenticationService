@@ -28,6 +28,8 @@ public class CentralBankAPI {
     @Value("${central_bank_url_transfer_money}")
     private String centralBankUrlTransferMoney;
 
+    private final RestTemplate restTemplate;
+
     public boolean confirmCreationAccount(BankAccount account) {
         return getConfirm(convertToRequestCreationAccountDTO(account), centralBankUrlNewAccount);
     }
@@ -36,13 +38,11 @@ public class CentralBankAPI {
         return getConfirm(convertToUserResponseDTO(user), centralBankUrlNewUser);
     }
 
-    public boolean confirmTransferMoney(TransferMoneyDTO transferMoneyDTO){//TODO
+    public boolean confirmTransferMoney(TransferMoneyDTO transferMoneyDTO){
         return getConfirm(transferMoneyDTO, centralBankUrlTransferMoney);
     }
 
     private boolean getConfirm(Object obj, String url){
-        RestTemplate restTemplate =  new RestTemplate();
-
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

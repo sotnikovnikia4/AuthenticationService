@@ -5,6 +5,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.codecrafters.AuthenticationService.api.CentralBankAPI;
+import ru.codecrafters.AuthenticationService.api.OrdersAPI;
+import ru.codecrafters.AuthenticationService.dto.CreateOrderDTO;
 import ru.codecrafters.AuthenticationService.dto.TransferMoneyDTO;
 import ru.codecrafters.AuthenticationService.models.BankAccount;
 import ru.codecrafters.AuthenticationService.models.Currency;
@@ -12,7 +14,9 @@ import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.repositories.BankAccountsRepository;
 import ru.codecrafters.AuthenticationService.repositories.CurrenciesRepository;
 import ru.codecrafters.AuthenticationService.util.AccountNotCreatedException;
+import ru.codecrafters.AuthenticationService.util.AnySuccessfulResponse;
 import ru.codecrafters.AuthenticationService.util.MoneyNotTransferredException;
+import ru.codecrafters.AuthenticationService.util.OrderNotCreatedException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -30,6 +34,7 @@ public class BankAccountsService {
     private final int lengthAccountNumber = 19;
 
     private final CentralBankAPI centralBankAPI;
+    private final OrdersAPI ordersAPI;
 
     public List<BankAccount> getAccountsByUserId(UUID id){
         return accountsRepository.findAllByUserId(id);
@@ -95,5 +100,22 @@ public class BankAccountsService {
 
         accountFrom.get().setBalance(accountFrom.get().getBalance().subtract(transferMoneyDTO.getMoneyMinus()));
         accountTo.get().setBalance(accountTo.get().getBalance().add(transferMoneyDTO.getMoneyPlus()));
+    }
+
+    @Transactional
+    public AnySuccessfulResponse createOrderAndReturnAnswer(UUID userId, CreateOrderDTO createOrderDTO) {
+        Optional<BankAccount> accountFrom = accountsRepository.findByAccountNumber(createOrderDTO.getBankAccountFrom());
+        if(accountFrom.isEmpty()){
+            throw new OrderNotCreatedException("Счет bankAccountFrom не существует в базе данных");
+        }
+
+        Optional<BankAccount> accountTo = accountsRepository.findByAccountNumber(createOrderDTO.getBankAccountTo());
+        if(accountTo.isEmpty()){
+            throw new OrderNotCreatedException("Счет bankAccountTo не существует в базе данных");
+        }
+
+
+
+        return ordersAPI.sendRequestCreateOrderAndGetMessageResponse(userId, createOrderDTO);
     }
 }

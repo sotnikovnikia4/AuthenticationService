@@ -37,7 +37,8 @@ public class SecurityConfig{
                                 .permitAll()
                                 .requestMatchers(
                                         "/accounts/**",
-                                        "/users/**"
+                                        "/users/**",
+                                        "/orders/create-order"
                                 ).authenticated()
                                 .anyRequest().permitAll()
                 )

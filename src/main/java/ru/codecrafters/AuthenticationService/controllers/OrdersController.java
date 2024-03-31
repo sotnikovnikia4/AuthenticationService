@@ -4,14 +4,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.codecrafters.AuthenticationService.dto.CreateOrderDTO;
 import ru.codecrafters.AuthenticationService.dto.TransferMoneyDTO;
+import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
 import ru.codecrafters.AuthenticationService.services.BankAccountsService;
-import ru.codecrafters.AuthenticationService.util.AnyErrorResponse;
-import ru.codecrafters.AuthenticationService.util.AnySuccessfulResponse;
-import ru.codecrafters.AuthenticationService.util.ErrorMethods;
-import ru.codecrafters.AuthenticationService.util.MoneyNotTransferredException;
+import ru.codecrafters.AuthenticationService.util.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
@@ -35,8 +37,29 @@ public class OrdersController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping("/create-order")
+    public ResponseEntity<AnySuccessfulResponse> createOrder(
+            @RequestBody @Valid CreateOrderDTO createOrderDTO,
+            BindingResult bindingResult
+            ){
+        if(bindingResult.hasErrors()){
+            throw new OrderNotCreatedException(ErrorMethods.formErrorMessage(bindingResult));
+        }
+
+        UUID userId = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId();
+
+        AnySuccessfulResponse response = accountsService.createOrderAndReturnAnswer(userId, createOrderDTO);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @ExceptionHandler
     public ResponseEntity<AnyErrorResponse> handleException(MoneyNotTransferredException e){
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AnyErrorResponse> handleException(OrderNotCreatedException e){
         AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
