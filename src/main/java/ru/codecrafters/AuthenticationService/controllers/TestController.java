@@ -31,7 +31,7 @@ public class TestController {
     }
 
     @GetMapping("/get-orders")
-    public ResponseEntity<List<OrderResponseDTO>> testUrl4(@RequestParam(name = "userId") UUID userId){//TODO
+    public ResponseEntity<List<OrderResponseDTO>> testUrl4(@RequestParam(name = "userId") UUID userId){
         return new ResponseEntity<>(List.of(new OrderResponseDTO()), HttpStatus.OK);
     }
 }
