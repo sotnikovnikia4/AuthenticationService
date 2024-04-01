@@ -91,4 +91,10 @@ public class BankAccountsController {
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<AnyErrorResponse> handleException(APIException e){
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

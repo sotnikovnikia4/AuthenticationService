@@ -2,11 +2,12 @@ package ru.codecrafters.AuthenticationService.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.codecrafters.AuthenticationService.dto.OrderResponseDTO;
 import ru.codecrafters.AuthenticationService.util.AnySuccessfulResponse;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("tests")
@@ -27,5 +28,10 @@ public class TestController {
     @PostMapping("/create-order")
     public ResponseEntity<AnySuccessfulResponse> testUrl3(){
         return new ResponseEntity<>(new AnySuccessfulResponse("Заявка успешно создана и находится на рассмотрении"), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/get-orders")
+    public ResponseEntity<List<OrderResponseDTO>> testUrl4(@RequestParam(name = "userId") UUID userId){//TODO
+        return new ResponseEntity<>(List.of(new OrderResponseDTO()), HttpStatus.OK);
     }
 }

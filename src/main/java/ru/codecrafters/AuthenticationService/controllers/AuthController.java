@@ -100,4 +100,10 @@ public class AuthController {
     public ResponseEntity<AnyErrorResponse> handleException(AuthenticationException e){
         return new ResponseEntity<>(new AnyErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<AnyErrorResponse> handleException(APIException e){
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }

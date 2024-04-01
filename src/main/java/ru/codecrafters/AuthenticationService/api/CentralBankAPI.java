@@ -14,6 +14,7 @@ import ru.codecrafters.AuthenticationService.dto.TransferMoneyDTO;
 import ru.codecrafters.AuthenticationService.dto.UserResponseDTO;
 import ru.codecrafters.AuthenticationService.models.BankAccount;
 import ru.codecrafters.AuthenticationService.models.User;
+import ru.codecrafters.AuthenticationService.util.APIException;
 
 @Component
 @PropertySource("classpath:/.env")
@@ -44,13 +45,17 @@ public class CentralBankAPI {
 
     private boolean getConfirm(Object obj, String url){
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(obj, headers);
+        try{
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Object> httpEntity = new HttpEntity<>(obj, headers);
 
-        String response = restTemplate.postForObject(url, httpEntity, String.class);
+            String response = restTemplate.postForObject(url, httpEntity, String.class);
 
-        return Boolean.parseBoolean(response);
+            return Boolean.parseBoolean(response);
+        }catch(Exception e){
+            throw new APIException("Ошибка при отправлении запроса или получении ответа от Центрального Банка");
+        }
     }
 
     private RequestCreationAccountDTO convertToRequestCreationAccountDTO(BankAccount account){

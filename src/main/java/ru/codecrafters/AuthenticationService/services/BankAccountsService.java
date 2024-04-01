@@ -34,7 +34,6 @@ public class BankAccountsService {
     private final int lengthAccountNumber = 19;
 
     private final CentralBankAPI centralBankAPI;
-    private final OrdersAPI ordersAPI;
 
     public List<BankAccount> getAccountsByUserId(UUID id){
         return accountsRepository.findAllByUserId(id);
@@ -100,20 +99,5 @@ public class BankAccountsService {
 
         accountFrom.get().setBalance(accountFrom.get().getBalance().subtract(transferMoneyDTO.getMoneyMinus()));
         accountTo.get().setBalance(accountTo.get().getBalance().add(transferMoneyDTO.getMoneyPlus()));
-    }
-
-    @Transactional
-    public String createOrderAndReturnAnswer(UUID userId, CreateOrderDTO createOrderDTO) {
-        Optional<BankAccount> accountFrom = accountsRepository.findByAccountNumber(createOrderDTO.getBankAccountFrom());
-        if(accountFrom.isEmpty()){
-            throw new OrderNotCreatedException("Счет bankAccountFrom не существует в базе данных");
-        }
-
-        Optional<BankAccount> accountTo = accountsRepository.findByAccountNumber(createOrderDTO.getBankAccountTo());
-        if(accountTo.isEmpty()){
-            throw new OrderNotCreatedException("Счет bankAccountTo не существует в базе данных");
-        }
-
-        return ordersAPI.sendRequestCreateOrderAndGetMessageResponse(userId, createOrderDTO, accountFrom.get().getCurrency().getCode(), accountTo.get().getCurrency().getCode());
     }
 }

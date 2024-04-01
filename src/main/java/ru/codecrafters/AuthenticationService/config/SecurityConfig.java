@@ -38,7 +38,8 @@ public class SecurityConfig{
                                 .requestMatchers(
                                         "/accounts/**",
                                         "/users/**",
-                                        "/orders/create-order"
+                                        "/orders/create-order",
+                                        "/orders/get-orders"
                                 ).authenticated()
                                 .anyRequest().permitAll()
                 )
