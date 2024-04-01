@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM openjdk:22-jdk-slim
 ARG JAR_FILE=target/AuthenticationService-0.0.1-SNAPSHOT.jar
 WORKDIR /opt/app
 COPY ${JAR_FILE} app.jar
