@@ -45,10 +45,6 @@ public class BankAccountsService {
             throw new AccountNotCreatedException("Данная валюта не поддерживается или неправильно написана");
         }
 
-        if(accountsRepository.findByUserAndCurrency(user, currency.get()).isPresent()){
-            throw new AccountNotCreatedException("У данного пользователя уже открыт счет в этой валюте");
-        }
-
         BankAccount bankAccount = new BankAccount(
                 generateAccountNumber(lengthAccountNumber),
                 new BigDecimal(10000),
