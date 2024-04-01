@@ -19,7 +19,7 @@ import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
 @RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "Users")
-public class UserController {
+public class UsersController {
 
     private final ModelMapper modelMapper;
     @GetMapping("/get-user-data")

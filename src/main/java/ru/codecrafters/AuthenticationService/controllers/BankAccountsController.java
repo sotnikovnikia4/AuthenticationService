@@ -12,7 +12,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.codecrafters.AuthenticationService.dto.BankAccountDTO;
 import ru.codecrafters.AuthenticationService.dto.CreationAccountDTO;
+import ru.codecrafters.AuthenticationService.dto.PutMoneyDTO;
 import ru.codecrafters.AuthenticationService.models.BankAccount;
+import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.security.UserDetailsImpl;
 import ru.codecrafters.AuthenticationService.services.BankAccountsService;
 import ru.codecrafters.AuthenticationService.util.ResponseStatus;
@@ -78,6 +80,22 @@ public class BankAccountsController {
         return modelMapper.map(bankAccount, BankAccountDTO.class);
     }
 
+    @PostMapping("/put-money")
+    public ResponseEntity<AnySuccessfulResponse> putMoney(
+            @RequestBody @Valid PutMoneyDTO putMoneyDTO,
+            BindingResult bindingResult
+            ){
+
+        if(bindingResult.hasErrors()){
+            throw new MoneyNotPutException(ErrorMethods.formErrorMessage(bindingResult));
+        }
+
+        User user = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        accountsService.putMoneyOrThrowException(user, putMoneyDTO.getAccountNumber(), putMoneyDTO.getValue());
+
+        return new ResponseEntity<>(new AnySuccessfulResponse("Деньги зачислены на счет"), HttpStatus.OK);
+    }
+
     @ExceptionHandler
     public ResponseEntity<AnyErrorResponse> handleException(AccountNotCreatedException e){
         AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
@@ -94,6 +112,12 @@ public class BankAccountsController {
 
     @ExceptionHandler
     public ResponseEntity<AnyErrorResponse> handleException(APIException e){
+        AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<AnyErrorResponse> handleException(MoneyNotPutException e){
         AnyErrorResponse response = new AnyErrorResponse(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

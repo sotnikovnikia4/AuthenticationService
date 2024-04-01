@@ -39,7 +39,7 @@ public class SecurityConfig{
                                         "/accounts/**",
                                         "/users/**",
                                         "/orders/create-order",
-                                        "/orders/get-orders"
+                                        "/orders"
                                 ).authenticated()
                                 .anyRequest().permitAll()
                 )

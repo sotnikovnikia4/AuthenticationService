@@ -57,7 +57,7 @@ public class OrdersController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/get-orders")
+    @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> getOrders(){
         UUID userId = ((UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId();
 

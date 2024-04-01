@@ -7,16 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.codecrafters.AuthenticationService.api.CentralBankAPI;
 import ru.codecrafters.AuthenticationService.api.OrdersAPI;
 import ru.codecrafters.AuthenticationService.dto.CreateOrderDTO;
+import ru.codecrafters.AuthenticationService.dto.PutMoneyDTO;
 import ru.codecrafters.AuthenticationService.dto.TransferMoneyDTO;
 import ru.codecrafters.AuthenticationService.models.BankAccount;
 import ru.codecrafters.AuthenticationService.models.Currency;
 import ru.codecrafters.AuthenticationService.models.User;
 import ru.codecrafters.AuthenticationService.repositories.BankAccountsRepository;
 import ru.codecrafters.AuthenticationService.repositories.CurrenciesRepository;
-import ru.codecrafters.AuthenticationService.util.AccountNotCreatedException;
-import ru.codecrafters.AuthenticationService.util.AnySuccessfulResponse;
-import ru.codecrafters.AuthenticationService.util.MoneyNotTransferredException;
-import ru.codecrafters.AuthenticationService.util.OrderNotCreatedException;
+import ru.codecrafters.AuthenticationService.util.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -99,5 +97,17 @@ public class BankAccountsService {
 
         accountFrom.get().setBalance(accountFrom.get().getBalance().subtract(transferMoneyDTO.getMoneyMinus()));
         accountTo.get().setBalance(accountTo.get().getBalance().add(transferMoneyDTO.getMoneyPlus()));
+    }
+
+    @Transactional
+    public void putMoneyOrThrowException(User user, String accountNumber, BigDecimal value){
+        Optional<BankAccount> account = accountsRepository.findByUserAndAccountNumber(user, accountNumber);
+        if(account.isEmpty()){
+            throw new MoneyNotPutException(
+                    "Пользователя с таким номером счёта не существует или этот счёт не принадлежит пользователю"
+            );
+        }
+
+        account.get().setBalance(account.get().getBalance().add(value));
     }
 }
